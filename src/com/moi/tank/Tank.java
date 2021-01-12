@@ -13,7 +13,7 @@ import java.util.UUID;
 public class Tank {
 
 
-    private static final int SPEED = 2;
+    private static final int SPEED = 5;
     public static int WIDTH = ResourceMgr.goodTankU.getWidth();
 
     public static int HEIGHT = ResourceMgr.goodTankU.getHeight();
@@ -40,13 +40,14 @@ public class Tank {
         this.living = living;
     }
     private Group group = Group.BAD;
-    public Tank(int x, int y, Dir dir, Group group, TankFrame tf) {
+    public Tank(int x, int y, Dir dir, Group group,Boolean moving, TankFrame tf) {
         super();
         this.x = x;
         this.y = y;
         this.dir = dir;
         this.group = group;
         this.tf = tf;
+        this.moving = moving;
 
         rect.x = this.x;
         rect.y = this.y;
@@ -68,6 +69,9 @@ public class Tank {
 //        rect.height = HEIGHT;
 //    }
 
+    /**
+     * ±ß½ç¼ì²â
+     */
     private void boundsCheck() {
         if (this.x < 2) x = 2;
         if (this.y < 28) y = 28;
@@ -75,9 +79,12 @@ public class Tank {
         if (this.y > TankFrame.GAME_HEIGHT - Tank.HEIGHT -2 ) y = TankFrame.GAME_HEIGHT -Tank.HEIGHT -2;
     }
 
+
     public void die() {
         this.living = false;
-        TankFrame.INSTANCE.tanks.remove(this);
+        if(this.getGroup() == Group.BAD) {
+            TankFrame.INSTANCE.tanks.remove(this);
+        }
         int eX = this.getX() + Tank.WIDTH/2 - Explode.WIDTH/2;
         int eY = this.getY() + Tank.HEIGHT/2 - Explode.HEIGHT/2;
         TankFrame.INSTANCE.explodes.add(new Explode(eX, eY));

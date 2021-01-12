@@ -2,13 +2,18 @@ package com.moi;
 
 import com.moi.tank.*;
 
+import java.util.Random;
+
 
 public class Main {
 
     public static void main(String[] args){
         TankFrame tf = TankFrame.INSTANCE;
         new Thread(()->new Audio("audio/war1.wav").loop()).start();
-        tf.addTank(new Tank(500, 500, Dir.DOWN, Group.BAD, tf));
+        for (int i = 0; i < 10; i++) {
+            tf.addTank(new Tank(new Random().nextInt(1080), new Random().nextInt(960), Dir.DOWN, Group.BAD,true,tf));
+        }
+
 
         new Thread(()-> {
             while(true) {

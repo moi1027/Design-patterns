@@ -24,10 +24,9 @@ public class TankFrame  extends Frame {
 
     Random r = new Random();
 
-    Tank myTank = new Tank(r.nextInt(GAME_WIDTH), r.nextInt(GAME_HEIGHT), Dir.DOWN, Group.GOOD, this);
+    Tank myTank = new Tank(r.nextInt(GAME_WIDTH), r.nextInt(GAME_HEIGHT), Dir.DOWN, Group.GOOD,false,this);
 
     Map<UUID,Tank> tanks = new HashMap<>();
-    //List<Tank> tanks = new ArrayList<>();
     List<Bullet> bullets = new ArrayList<>();
     List<Explode> explodes = new ArrayList<>();
 
@@ -111,7 +110,9 @@ public class TankFrame  extends Frame {
             for(Tank t : values ) {
                 bullets.get(i).collideWith(t);
             }
+            bullets.get(i).collideWith(myTank);
         }
+
 
     }
 

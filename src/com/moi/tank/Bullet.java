@@ -1,6 +1,7 @@
 package com.moi.tank;
 
 import java.awt.*;
+import java.util.Random;
 import java.util.UUID;
 
 /**
@@ -10,6 +11,7 @@ import java.util.UUID;
  * @create: 2021/1/7 21:16
  **/
 public class Bullet {
+
 
     private final static int SPEED = 6;
 
@@ -79,11 +81,13 @@ public class Bullet {
      */
     public void collideWith(Tank tank) {
         if(this.playerId.equals(tank.getId())) return;
-        //System.out.println("bullet rect:" + this.rect);
-        //System.out.println("tank rect:" + tank.rect);
-        if(this.living && tank.isLiving() && this.rect.intersects(tank.rect)) {
+        if(this.living && tank.isLiving() && tank.getGroup() != this.getGroup()&&this.rect.intersects(tank.rect)) {
             tank.die();
             this.die();
+            this.tf.tanks.remove(tank.getId());
+            if(tank.getGroup() == Group.GOOD){
+                this.tf.myTank = new Tank(new Random().nextInt(1080), new Random().nextInt(960), Dir.DOWN, Group.GOOD,false,this.tf);
+            }
             //Client.INSTANCE.send(new TankDieMsg(this.id, tank.getId()));
         }
 
