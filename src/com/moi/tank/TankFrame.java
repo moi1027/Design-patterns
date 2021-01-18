@@ -16,7 +16,7 @@ import java.util.List;
  **/
 public class TankFrame  extends Frame {
 
-    //建一个单例
+    //建一个单例 饿汉式单例
     public static final TankFrame INSTANCE = new TankFrame();
 
     //游戏窗口的宽高
@@ -27,7 +27,7 @@ public class TankFrame  extends Frame {
     Tank myTank = new Tank(r.nextInt(GAME_WIDTH), r.nextInt(GAME_HEIGHT), Dir.DOWN, Group.GOOD,false,this);
 
     Map<UUID,Tank> tanks = new HashMap<>();
-    List<Bullet> bullets = new ArrayList<>();
+    public List<Bullet> bullets = new ArrayList<>();
     List<Explode> explodes = new ArrayList<>();
 
 
@@ -53,7 +53,7 @@ public class TankFrame  extends Frame {
         return null;
     }
 
-    public TankFrame(){
+    private TankFrame(){
         setSize(GAME_WIDTH, GAME_HEIGHT);
         setResizable(false);
         setVisible(true);

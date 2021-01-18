@@ -1,5 +1,8 @@
 package com.moi.tank;
 
+import com.moi.tank.strategy.DefaultStrategy;
+import com.moi.tank.strategy.MyTankFireStrategy;
+
 import java.awt.*;
 import java.util.Random;
 import java.util.UUID;
@@ -18,18 +21,18 @@ public class Tank {
 
     public static int HEIGHT = ResourceMgr.goodTankU.getHeight();
 
-    private UUID id = UUID.randomUUID();
+    public UUID id = UUID.randomUUID();
 
     Rectangle rect = new Rectangle();
 
     private Random random = new Random();
-    private int x, y;
+    public int x, y;
 
-    private Dir dir = Dir.DOWN;
+    public Dir dir = Dir.DOWN;
 
-    private boolean moving = false;
+    public boolean moving = false;
 
-    private TankFrame tf = null;
+    public TankFrame tf = null;
 
     private boolean living = true;
     public boolean isLiving() {
@@ -39,7 +42,7 @@ public class Tank {
     public void setLiving(boolean living) {
         this.living = living;
     }
-    private Group group = Group.BAD;
+    public Group group = Group.BAD;
     public Tank(int x, int y, Dir dir, Group group,Boolean moving, TankFrame tf) {
         super();
         this.x = x;
@@ -91,16 +94,20 @@ public class Tank {
     }
 
     public void fire() {
-        int bX = this.x + Tank.WIDTH/2 - Bullet.WIDTH/2;
-        int bY = this.y + Tank.HEIGHT/2 - Bullet.HEIGHT/2;
-
-        Bullet b = new Bullet(this.id, bX, bY, this.dir, this.group, this.tf);
-
-        tf.bullets.add(b);
-
-       // Client.INSTANCE.send(new BulletNewMsg(b));
-
-        if(this.group == Group.GOOD) new Thread(()->new Audio("audio/tank_fire.wav").play()).start();
+        if(this.group == Group.GOOD){
+            new MyTankFireStrategy().fire(this);
+        }else{
+            new DefaultStrategy().fire(this);
+        }
+//        int bX = this.x + Tank.WIDTH/2 - Bullet.WIDTH/2;
+//        int bY = this.y + Tank.HEIGHT/2 - Bullet.HEIGHT/2;
+//
+//        Bullet b = new Bullet(this.id, bX, bY, this.dir, this.group, this.tf);
+//
+//        tf.bullets.add(b);
+//
+//
+//        if(this.group == Group.GOOD) new Thread(()->new Audio("audio/tank_fire.wav").play()).start();
     }
 
     public Dir getDir() {
