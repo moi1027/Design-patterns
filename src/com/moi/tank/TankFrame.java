@@ -1,5 +1,7 @@
 package com.moi.tank;
 
+import com.moi.tank.abstractfactory.*;
+
 import java.awt.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
@@ -19,31 +21,39 @@ public class TankFrame  extends Frame {
     //建一个单例 饿汉式单例
     public static final TankFrame INSTANCE = new TankFrame();
 
+    /**
+     * 创建一个标准工厂
+     */
+    public AbstractFactory abstractFactory = new DefaultFactory();
+
     //游戏窗口的宽高
     static final int GAME_WIDTH = 1080, GAME_HEIGHT = 960;
 
     Random r = new Random();
 
-    Tank myTank = new Tank(r.nextInt(GAME_WIDTH), r.nextInt(GAME_HEIGHT), Dir.DOWN, Group.GOOD,false,this);
 
-    Map<UUID,Tank> tanks = new HashMap<>();
-    public List<Bullet> bullets = new ArrayList<>();
-    List<Explode> explodes = new ArrayList<>();
+    BaseTank myTank = abstractFactory.createTank(r.nextInt(GAME_WIDTH), r.nextInt(GAME_HEIGHT), Dir.DOWN, Group.GOOD,false,this);
+
+    Map<UUID, BaseTank> tanks = new HashMap<>();
+    public List<BaseBullet> bullets = new ArrayList<>();
+    List<BaseExplode> explodes = new ArrayList<>();
+
+
 
 
     public void addBullet(Bullet b) {
         bullets.add(b);
     }
 
-    public void addTank(Tank t) {
+    public void addTank(BaseTank t) {
         tanks.put(t.getId(), t);
     }
 
-    public Tank findTankByUUID(UUID id) {
+    public BaseTank findTankByUUID(UUID id) {
         return tanks.get(id);
     }
 
-    public Bullet findBulletByUUID(UUID id) {
+    public BaseBullet findBulletByUUID(UUID id) {
         for(int i=0; i<bullets.size(); i++) {
             if(bullets.get(i).getId().equals(id)) {
                 return bullets.get(i);
@@ -105,9 +115,9 @@ public class TankFrame  extends Frame {
             explodes.get(i).paint(g);
         }
         //collision detect
-        Collection<Tank> values = tanks.values();
+        Collection<BaseTank> values = tanks.values();
         for(int i=0; i<bullets.size(); i++) {
-            for(Tank t : values ) {
+            for(BaseTank t : values ) {
                 bullets.get(i).collideWith(t);
             }
             bullets.get(i).collideWith(myTank);

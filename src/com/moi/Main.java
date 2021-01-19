@@ -11,7 +11,7 @@ public class Main {
         TankFrame tf = TankFrame.INSTANCE;
         new Thread(()->new Audio("audio/war1.wav").loop()).start();
         for (int i = 0; i < 10; i++) {
-            tf.addTank(new Tank(new Random().nextInt(1080), new Random().nextInt(960), Dir.DOWN, Group.BAD,true,tf));
+            tf.addTank(tf.abstractFactory.createTank(new Random().nextInt(1080), new Random().nextInt(960), Dir.DOWN, Group.BAD,true,tf));
         }
 
 

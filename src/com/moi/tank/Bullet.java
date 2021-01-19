@@ -1,5 +1,8 @@
 package com.moi.tank;
 
+import com.moi.tank.abstractfactory.BaseBullet;
+import com.moi.tank.abstractfactory.BaseTank;
+
 import java.awt.*;
 import java.util.Random;
 import java.util.UUID;
@@ -10,7 +13,7 @@ import java.util.UUID;
  * @author: moi
  * @create: 2021/1/7 21:16
  **/
-public class Bullet {
+public class Bullet extends BaseBullet {
 
 
     private final static int SPEED = 6;
@@ -44,6 +47,7 @@ public class Bullet {
         this.tf = tf;
     }
 
+    @Override
     public UUID getId() {
         return id;
     }
@@ -79,16 +83,16 @@ public class Bullet {
      * 子弹与坦克的碰撞检测
      * @param tank
      */
-    public void collideWith(Tank tank) {
+    @Override
+    public void collideWith(BaseTank tank) {
         if(this.playerId.equals(tank.getId())) return;
         if(this.living && tank.isLiving() && tank.getGroup() != this.getGroup()&&this.rect.intersects(tank.rect)) {
             tank.die();
             this.die();
             this.tf.tanks.remove(tank.getId());
             if(tank.getGroup() == Group.GOOD){
-                this.tf.myTank = new Tank(new Random().nextInt(1080), new Random().nextInt(960), Dir.DOWN, Group.GOOD,false,this.tf);
+                this.tf.myTank = tf.abstractFactory.createTank(new Random().nextInt(1080), new Random().nextInt(960), Dir.DOWN, Group.GOOD,false,this.tf);
             }
-            //Client.INSTANCE.send(new TankDieMsg(this.id, tank.getId()));
         }
 
     }
@@ -123,6 +127,7 @@ public class Bullet {
         }
 
     }
+    @Override
     public void paint(Graphics g) {
         if(!living) {
             tf.bullets.remove(this);

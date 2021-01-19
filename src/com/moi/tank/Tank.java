@@ -1,5 +1,7 @@
 package com.moi.tank;
 
+import com.moi.tank.abstractfactory.BaseTank;
+import com.moi.tank.abstractfactory.DefaultFactory;
 import com.moi.tank.strategy.DefaultStrategy;
 import com.moi.tank.strategy.MyTankFireStrategy;
 
@@ -13,7 +15,7 @@ import java.util.UUID;
  * @author: moi
  * @create: 2020/12/30 17:44
  **/
-public class Tank {
+public class Tank extends BaseTank {
 
 
     private static final int SPEED = 5;
@@ -23,7 +25,7 @@ public class Tank {
 
     public UUID id = UUID.randomUUID();
 
-    Rectangle rect = new Rectangle();
+
 
     private Random random = new Random();
     public int x, y;
@@ -35,6 +37,7 @@ public class Tank {
     public TankFrame tf = null;
 
     private boolean living = true;
+    @Override
     public boolean isLiving() {
         return living;
     }
@@ -83,6 +86,7 @@ public class Tank {
     }
 
 
+    @Override
     public void die() {
         this.living = false;
         if(this.getGroup() == Group.BAD) {
@@ -90,9 +94,10 @@ public class Tank {
         }
         int eX = this.getX() + Tank.WIDTH/2 - Explode.WIDTH/2;
         int eY = this.getY() + Tank.HEIGHT/2 - Explode.HEIGHT/2;
-        TankFrame.INSTANCE.explodes.add(new Explode(eX, eY));
+        TankFrame.INSTANCE.explodes.add(tf.abstractFactory.createExplode(eX, eY));
     }
 
+    @Override
     public void fire() {
         if(this.group == Group.GOOD){
             new MyTankFireStrategy().fire(this);
@@ -110,15 +115,18 @@ public class Tank {
 //        if(this.group == Group.GOOD) new Thread(()->new Audio("audio/tank_fire.wav").play()).start();
     }
 
+    @Override
     public Dir getDir() {
         return dir;
     }
 
+    @Override
     public Group getGroup() {
         return group;
     }
 
 
+    @Override
     public UUID getId() {
         return id;
     }
@@ -175,6 +183,7 @@ public class Tank {
 
     }
 
+    @Override
     public void paint(Graphics g) {
         //uuid on head
         Color c = g.getColor();
@@ -220,6 +229,7 @@ public class Tank {
         this.dir = Dir.values()[random.nextInt(4)];
     }
 
+    @Override
     public void setDir(Dir dir) {
         this.dir = dir;
     }
@@ -233,6 +243,7 @@ public class Tank {
         this.id = id;
     }
 
+    @Override
     public void setMoving(boolean moving) {
         this.moving = moving;
     }
