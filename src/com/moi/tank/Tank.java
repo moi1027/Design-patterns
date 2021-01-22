@@ -13,7 +13,7 @@ import java.util.UUID;
  * @author: moi
  * @create: 2020/12/30 17:44
  **/
-public class Tank {
+public class Tank extends GameObject{
 
 
     private static final int SPEED = 5;
@@ -23,33 +23,59 @@ public class Tank {
 
     public UUID id = UUID.randomUUID();
 
-    Rectangle rect = new Rectangle();
+    public Rectangle rect = new Rectangle();
 
     private Random random = new Random();
     public int x, y;
+
+    /**
+     * 上一步位置的坐标
+     */
+    public int oldX,oldY;
+
+    public int getOldX() {
+        return oldX;
+    }
+
+    public void setOldX(int oldX) {
+        this.oldX = oldX;
+    }
+
+    public int getOldY() {
+        return oldY;
+    }
+
+    public void setOldY(int oldY) {
+        this.oldY = oldY;
+    }
 
     public Dir dir = Dir.DOWN;
 
     public boolean moving = false;
 
-    public TankFrame tf = null;
+    public GameModel gm = GameModel.INSTANCE;
 
     private boolean living = true;
     public boolean isLiving() {
         return living;
     }
 
+
+    public void back(){
+        this.x = oldX;
+        this.y = oldY;
+    }
+
     public void setLiving(boolean living) {
         this.living = living;
     }
     public Group group = Group.BAD;
-    public Tank(int x, int y, Dir dir, Group group,Boolean moving, TankFrame tf) {
+    public Tank(int x, int y, Dir dir, Group group,Boolean moving) {
         super();
         this.x = x;
         this.y = y;
         this.dir = dir;
         this.group = group;
-        this.tf = tf;
         this.moving = moving;
 
         rect.x = this.x;
@@ -58,39 +84,35 @@ public class Tank {
         rect.height = HEIGHT;
     }
 
-//    public Tank(TankJoinMsg msg) {
-//        this.x = msg.x;
-//        this.y = msg.y;
-//        this.dir = msg.dir;
-//        this.moving = msg.moving;
-//        this.group = msg.group;
-//        this.id = msg.id;
-//
-//        rect.x = this.x;
-//        rect.y = this.y;
-//        rect.width = WIDTH;
-//        rect.height = HEIGHT;
-//    }
+
 
     /**
      * 边界检测
      */
     private void boundsCheck() {
-        if (this.x < 2) x = 2;
-        if (this.y < 28) y = 28;
-        if (this.x > TankFrame.GAME_WIDTH- Tank.WIDTH -2) x = TankFrame.GAME_WIDTH - Tank.WIDTH -2;
-        if (this.y > TankFrame.GAME_HEIGHT - Tank.HEIGHT -2 ) y = TankFrame.GAME_HEIGHT -Tank.HEIGHT -2;
+        if (this.x < 2) {
+            x = 2;
+        }
+        if (this.y < 28){
+            y = 28;
+        }
+        if (this.x > TankFrame.GAME_WIDTH- Tank.WIDTH -2){
+            x = TankFrame.GAME_WIDTH - Tank.WIDTH -2;
+        }
+        if (this.y > TankFrame.GAME_HEIGHT - Tank.HEIGHT -2 ){
+            y = TankFrame.GAME_HEIGHT -Tank.HEIGHT -2;
+        }
     }
 
 
     public void die() {
         this.living = false;
         if(this.getGroup() == Group.BAD) {
-            TankFrame.INSTANCE.tanks.remove(this);
+            gm.remove(this);
         }
         int eX = this.getX() + Tank.WIDTH/2 - Explode.WIDTH/2;
         int eY = this.getY() + Tank.HEIGHT/2 - Explode.HEIGHT/2;
-        TankFrame.INSTANCE.explodes.add(new Explode(eX, eY));
+        gm.add(new Explode(eX, eY));
     }
 
     public void fire() {
@@ -99,15 +121,6 @@ public class Tank {
         }else{
             new DefaultStrategy().fire(this);
         }
-//        int bX = this.x + Tank.WIDTH/2 - Bullet.WIDTH/2;
-//        int bY = this.y + Tank.HEIGHT/2 - Bullet.HEIGHT/2;
-//
-//        Bullet b = new Bullet(this.id, bX, bY, this.dir, this.group, this.tf);
-//
-//        tf.bullets.add(b);
-//
-//
-//        if(this.group == Group.GOOD) new Thread(()->new Audio("audio/tank_fire.wav").play()).start();
     }
 
     public Dir getDir() {
@@ -142,8 +155,12 @@ public class Tank {
             return ;
         }
 
-        //save the oldDir for TankDirChangedMsg
-        //oldDir = dir;
+
+        /**
+         * 给上一步赋值
+         */
+        oldX = x;
+        oldY = y;
 
         switch (dir) {
             case LEFT:
@@ -175,12 +192,27 @@ public class Tank {
 
     }
 
+    @Override
+    public  int getWidth() {
+        return WIDTH;
+    }
+
+
+
+    @Override
+    public  int getHeight() {
+        return HEIGHT;
+    }
+
+
+
+    @Override
     public void paint(Graphics g) {
         //uuid on head
         Color c = g.getColor();
         g.setColor(Color.YELLOW);
-        g.drawString(id.toString(), this.x, this.y - 20);
-        g.drawString("live=" + living, x, y-10);
+//        g.drawString(id.toString(), this.x, this.y - 20);
+//        g.drawString("live=" + living, x, y-10);
         g.setColor(c);
 
         //draw a rect if dead!

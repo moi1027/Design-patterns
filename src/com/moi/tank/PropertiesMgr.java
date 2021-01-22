@@ -26,7 +26,7 @@ public class PropertiesMgr {
         }
     }
 
-    public PropertiesMgr getInstance(){
+    public static PropertiesMgr getInstance(){
         return propertiesMgr;
     }
 
@@ -35,7 +35,8 @@ public class PropertiesMgr {
     }
 
     public static void main(String[] args) {
-        System.out.println(propertiesMgr.get("initTankCount"));
+        String o = (String)propertiesMgr.get("initTankCount");
+        System.out.println(Integer.parseInt(o));
     }
 
 

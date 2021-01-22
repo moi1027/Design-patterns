@@ -10,7 +10,7 @@ import java.util.UUID;
  * @author: moi
  * @create: 2021/1/7 21:16
  **/
-public class Bullet {
+public class Bullet extends GameObject{
 
 
     private final static int SPEED = 6;
@@ -30,19 +30,10 @@ public class Bullet {
     /**
      * 矩形
      */
-    Rectangle rect = new Rectangle();
+    public Rectangle rect = new Rectangle();
 
-    TankFrame tf;
+    GameModel gm = GameModel.INSTANCE;
 
-
-
-    public TankFrame getTf() {
-        return tf;
-    }
-
-    public void setTf(TankFrame tf) {
-        this.tf = tf;
-    }
 
     public UUID getId() {
         return id;
@@ -62,13 +53,12 @@ public class Bullet {
         this.playerId = playerId;
     }
 
-    public Bullet(UUID playerId, int x, int y, Dir dir, Group group, TankFrame tf){
+    public Bullet(UUID playerId, int x, int y, Dir dir, Group group){
         this.playerId = playerId;
         this.x = x;
         this.y = y;
         this.dir = dir;
         this.group =group;
-        this.tf = tf;
         rect.x = this.x;
         rect.y = this.y;
         rect.width = WIDTH;
@@ -76,7 +66,7 @@ public class Bullet {
     }
 
     /**
-     * 子弹与坦克的碰撞检测
+     * 子弹与坦克的碰撞检测 废弃 由调停者模式来实现了解耦合
      * @param tank
      */
     public void collideWith(Tank tank) {
@@ -84,9 +74,9 @@ public class Bullet {
         if(this.living && tank.isLiving() && tank.getGroup() != this.getGroup()&&this.rect.intersects(tank.rect)) {
             tank.die();
             this.die();
-            this.tf.tanks.remove(tank.getId());
+            this.gm.remove(tank);
             if(tank.getGroup() == Group.GOOD){
-                this.tf.myTank = new Tank(new Random().nextInt(1080), new Random().nextInt(960), Dir.DOWN, Group.GOOD,false,this.tf);
+                this.gm.myTank = new Tank(new Random().nextInt(1080), new Random().nextInt(960), Dir.DOWN, Group.GOOD,false);
             }
             //Client.INSTANCE.send(new TankDieMsg(this.id, tank.getId()));
         }
@@ -123,9 +113,10 @@ public class Bullet {
         }
 
     }
+    @Override
     public void paint(Graphics g) {
         if(!living) {
-            tf.bullets.remove(this);
+            gm.remove(this);
         }
 
         switch(dir) {
@@ -144,6 +135,16 @@ public class Bullet {
         }
 
         move();
+    }
+
+    @Override
+    public int getWidth() {
+        return WIDTH;
+    }
+
+    @Override
+    public int getHeight() {
+        return HEIGHT;
     }
 
     /**
