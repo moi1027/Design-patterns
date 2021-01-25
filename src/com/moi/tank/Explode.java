@@ -6,7 +6,7 @@ public class Explode extends GameObject{
 	public static int WIDTH = ResourceMgr.explodes[0].getWidth();
 	public static int HEIGHT = ResourceMgr.explodes[0].getHeight();
 	
-	private int x, y;
+	//private int x, y;
 
 	
 	private int step = 0;
@@ -17,8 +17,8 @@ public class Explode extends GameObject{
 		
 		new Thread(()->new Audio("audio/explode.wav").play()).start();
 	}
-	
-	
+
+
 
 	@Override
 	public void paint(Graphics g) {

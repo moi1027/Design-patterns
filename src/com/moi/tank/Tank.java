@@ -26,7 +26,9 @@ public class Tank extends GameObject{
     public Rectangle rect = new Rectangle();
 
     private Random random = new Random();
-    public int x, y;
+    /*public int x;
+    public int y;*/
+
 
     /**
      * 上一步位置的坐标
@@ -56,6 +58,7 @@ public class Tank extends GameObject{
     public GameModel gm = GameModel.INSTANCE;
 
     private boolean living = true;
+
     public boolean isLiving() {
         return living;
     }
@@ -126,6 +129,7 @@ public class Tank extends GameObject{
     public Dir getDir() {
         return dir;
     }
+
 
     public Group getGroup() {
         return group;
@@ -211,8 +215,6 @@ public class Tank extends GameObject{
         //uuid on head
         Color c = g.getColor();
         g.setColor(Color.YELLOW);
-//        g.drawString(id.toString(), this.x, this.y - 20);
-//        g.drawString("live=" + living, x, y-10);
         g.setColor(c);
 
         //draw a rect if dead!

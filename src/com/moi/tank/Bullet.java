@@ -83,6 +83,7 @@ public class Bullet extends GameObject{
 
     }
 
+
     public void die() {
         this.living = false;
     }
@@ -150,8 +151,8 @@ public class Bullet extends GameObject{
     /**
      * ×Óµ¯µÄ×ø±ê
      */
-    private int x;
-    private int y;
+//    private int x;
+//    private int y;
 
     private Dir dir;
 
@@ -179,6 +180,7 @@ public class Bullet extends GameObject{
         this.dir = dir;
     }
 
+
     public boolean isLiving() {
         return living;
     }
@@ -186,6 +188,7 @@ public class Bullet extends GameObject{
     public void setLiving(boolean living) {
         this.living = living;
     }
+
 
     public Group getGroup() {
         return group;

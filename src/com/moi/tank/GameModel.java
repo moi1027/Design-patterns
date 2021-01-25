@@ -2,6 +2,7 @@ package com.moi.tank;
 
 import com.moi.tank.cor.Collider;
 import com.moi.tank.cor.ColliderChain;
+import com.moi.tank.decorator.RectDecorator;
 import org.omg.PortableInterceptor.INACTIVE;
 
 import java.awt.*;
@@ -49,7 +50,8 @@ public class GameModel {
 
         //初始化敌人坦克
         for (int i = 0; i < tankNums; i++) {
-            add(new Tank(50*i+100,20*i+50,Dir.DOWN, Group.BAD,true));
+            add(new RectDecorator(new Tank(100*i+200,100,Dir.DOWN, Group.BAD,true)));
+            //add(new Tank(100*i+200,100,Dir.DOWN, Group.BAD,true));
         }
     }
 
